@@ -31,7 +31,12 @@ public class TxtTool {
 	public String getText() {
 		return this.text;
 	}
+	
+	public void setText(String string) {
+		this.text=string;
+	}
 
+	//get system input
 	public void getInput() {
 		String temp = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -62,8 +67,12 @@ public class TxtTool {
 		this.text = header + this.text + tail;
 	}
 
-	protected void setReplace(String toReplace, String replacement) {
+	public void setReplace(String toReplace, String replacement) {
 		replaceMap.put(toReplace, replacement);
+	}
+	
+	public void removeReplace(String toReplace) {
+		replaceMap.remove(toReplace);
 	}
 
 	public void writeFile(String fileName) throws IOException {
@@ -75,6 +84,14 @@ public class TxtTool {
 		pStream.print(this.text);
 
 	}
+	public void writeFile(File file) throws IOException {
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		PrintStream pStream = new PrintStream(new FileOutputStream(file));
+		pStream.print(this.text);
+
+	}
 
 	@Override
 	public String toString() {
@@ -83,6 +100,43 @@ public class TxtTool {
 
 	public void writeFile() throws IOException {
 		writeFile("tempRuslt.txt");
+	}
+	
+	public void removeLineHeader(int n) {
+		String string="";
+		String[] result=this.text.split("\r\n");
+		for (String s:result) {		
+			string+=s.substring(n, s.length());
+			string+="\r\n";
+		}
+		setText(string.substring(0, string.length()-2));
+	}
+	public void removeLineTail(int n) {
+		String string="";
+		String[] result=this.text.split("\r\n");
+		for (String s:result) {		
+			string+=s.substring(0, s.length()-n);
+			string+="\r\n";
+		}
+		setText(string.substring(0, string.length()-2));
+	}
+	public void addLineHead(String adder) {
+		String string="";
+		String[] result=this.text.split("\r\n");
+		for (String s:result) {		
+			string+=(adder+s);
+			string+="\r\n";
+		}
+		setText(string.substring(0, string.length()-2));
+	}
+	public void addLineTail(String adder) {
+		String string="";
+		String[] result=this.text.split("\r\n");
+		for (String s:result) {		
+			string+=(s+adder);
+			string+="\r\n";
+		}
+		setText(string.substring(0, string.length()-2));
 	}
 
 	public void doProcess() {
@@ -101,8 +155,8 @@ public class TxtTool {
 
 	public static void main(String[] args) {
 		TxtTool tool = new TxtTool();
-		tool.getInput();
-		tool.doProcess();
+		tool.setText("s12345\ns12345");
+		tool.removeLineTail(2);
 		System.out.println(tool.getText());
 	}
 }
